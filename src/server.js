@@ -9,18 +9,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 const db = require('./models');
 
-db.mongoose
-    .connect(`mongodb://127.0.0.1:27017`, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then(() => {
-      console.log('Successfully connect to MongoDB.');
-    })
-    .catch((err) => {
-      console.error('Connection error', err);
-      process.exit();
-    });
+// TODO: move and error handling
+db.mongoose.connect('mongodb://127.0.0.1:27017/pixel-toons');
 
 app.use('/api', require('./routes/api.route'));
 
