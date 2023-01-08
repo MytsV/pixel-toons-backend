@@ -1,12 +1,26 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
-const {isSignUpValid} = require("../middleware/authValidation");
+const {getSignUpError} = require("../middleware/authValidation");
+
+const handleSignUpError = (err, res) => {
+  if (err.message) {
+    //422 Unprocessable Entity
+    res.status(422).send(err.message);
+  } else if (err.index) {
+    //422 Unprocessable Entity
+    res.status(422).send('User with such email or username already exists');
+  } else {
+    //Server Error
+    res.status(500).send(err.message);
+  }
+};
 
 const SALT_ROUNDS = 8;
 
 const signUp = (req, res) => {
-  if (!isSignUpValid(req)) {
-    return res.status(422).send('Invalid data');
+  const err = getSignUpError(req);
+  if (err != null) {
+    return handleSignUpError(err, res);
   }
   const user = new User({
     username: req.body.username,
@@ -15,8 +29,7 @@ const signUp = (req, res) => {
   });
   user.save((err, user) => {
     if (err != null) {
-      //TODO: handle via different function
-      res.status(422).send(err);
+      handleSignUpError(err, res);
     } else {
       res.send("User was successfully created");
     }
