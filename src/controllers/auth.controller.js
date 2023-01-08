@@ -1,5 +1,8 @@
 const User = require("../models/user.model");
+const config = require("../config/auth.config");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
 const {getSignUpError} = require("../middleware/authValidation");
 
 const handleSignUpError = (err, res) => {
@@ -36,12 +39,46 @@ const signUp = (req, res) => {
   });
 };
 
+const handleSignInError = (err, res) => {
+  //Server Error
+  res.status(500).send(err.message);
+};
+
 const signIn = (req, res) => {
+  if (!req.body.password) {
+    //422 Unprocessable Entity
+    return res.status(422).send('Password is required!');
+  }
+  User.findOne({
+    "$or": [
+      {
+        username: req.body.login
+      },
+      {
+        email: req.body.login
+      },
+    ]
+  }).exec((err, user) => {
+    if (err != null) return handleSignInError(err, res);
+    if (!user) return res.status(404).send('User hasn\'t been found');
 
+    const isPassValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+    if (!isPassValid) return res.status(404).send('Password isn\'t valid');
+
+    const token = jwt.sign({ id: user.id }, config.secret, {
+      expiresIn: 24 * 60 * 60, // 24 hours
+    });
+
+    res.send({
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      token: token
+    });
+  });
 };
 
-const signOut = (req, res) => {
-
-};
-
-module.exports = {signUp, signIn, signOut};
+module.exports = {signUp, signIn};
