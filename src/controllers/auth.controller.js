@@ -3,7 +3,7 @@ const config = require("../config/auth.config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const {getSignUpError} = require("../middleware/authValidation");
+const {getSignUpError} = require("../middleware/auth_validation");
 
 const handleSignUpError = (err, res) => {
   if (err.message) {
