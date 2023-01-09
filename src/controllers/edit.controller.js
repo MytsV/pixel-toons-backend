@@ -7,7 +7,7 @@ const editUser = async (req, res) => {
   //403 Forbidden
   if (req.params.id !== req.userId) return res.status(403).send('Forbidden');
   const user = await User.findOne({_id: req.userId});
-  if (!user) return res.status(404).send('Not found');
+  if (!user) return res.status(404).send('User not found');
   const data = {
     biography: req.body.biography,
     avatarUrl: req.body.avatarUrl
@@ -22,9 +22,8 @@ const editUser = async (req, res) => {
   try {
     await user.updateOne(userSchema);
     const editedUser = await User.findOne({_id: req.userId});
-    res.status(200).send(editedUser);
+    res.send(editedUser);
   } catch (err) {
-    console.log(err);
     if (err.message) {
       //422 Unprocessable Entity
       return res.status(422).send(err);
