@@ -1,5 +1,16 @@
 const mongoose = require("mongoose");
 
+const userData = new mongoose.Schema({
+  biography: {
+    type: String,
+    minLength: 5,
+    maxLength: 140
+  },
+  avatarUrl: {
+    type: String
+  }
+});
+
 const User = mongoose.model(
   "User",
   new mongoose.Schema({
@@ -20,6 +31,11 @@ const User = mongoose.model(
       type: String,
       required: true,
     },
+    joinDate: {
+      type: Date,
+      required: true
+    },
+    data: userData
   }),
   'users'
 );
