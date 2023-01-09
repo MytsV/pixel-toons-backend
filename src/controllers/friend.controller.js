@@ -22,4 +22,22 @@ const addFriend = async (req, res) => {
   return res.send('Successfully added a friend');
 };
 
-module.exports = {addFriend};
+const getFriends = async (req, res) => {
+  if (!req.query.id) return res.status(422).send('Parameter missing');
+  const user = await User.findOne({_id: req.query.id});
+  if (!user) return res.status(404).send('User not found');
+  const friends = await User.find({_id: {$in: user.data.friends}});
+  res.send(friends.map((u) => {
+    //TODO: extract
+    return {
+      id: u._id,
+      username: u.username,
+      joinDate: u.joinDate,
+      data: u.data,
+    };
+  }));
+};
+
+//TODO: deletion
+
+module.exports = {addFriend, getFriends};
