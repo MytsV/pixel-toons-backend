@@ -1,5 +1,5 @@
-const {validateToken} = require("../middleware");
-const User = require("../models/user.model");
+const {validateToken} = require('../middleware');
+const User = require('../models/user.model');
 
 const PER_PAGE = 10;
 
@@ -18,7 +18,7 @@ const getById = async (req, res) => {
   const data = {
     username: user.username,
     joinDate: user.joinDate,
-    data: user.data
+    data: user.data,
   };
   if (req.userId === req.params.id) {
     data.email = user.email;
@@ -49,9 +49,9 @@ const getAll = async (req, res) => {
       id: u._id,
       username: u.username,
       joinDate: u.joinDate,
-      data: u.data
+      data: u.data,
     };
   }));
-}
+};
 
 module.exports = {getById, getAll};
