@@ -1,5 +1,5 @@
-const {validateToken} = require("../middleware");
-const User = require("../models/user.model");
+const {validateToken} = require('../middleware');
+const User = require('../models/user.model');
 
 const addFriend = async (req, res) => {
   if (!req.query.friendId) return res.status(422).send('Parameter missing');
@@ -15,8 +15,8 @@ const addFriend = async (req, res) => {
   newFriends.push(friend._id);
   await user.updateOne({
     data: {
-      friends: newFriends
-    }
+      friends: newFriends,
+    },
   });
 
   return res.send('Successfully added a friend');
