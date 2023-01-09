@@ -1,9 +1,9 @@
-const {verifyToken} = require("../middleware");
+const {validateToken} = require("../middleware");
 
 const tokenToID = (req, res) => {
-  verifyToken(req, res);
+  validateToken(req, res);
   if (req.userId) {
-    res.send({"id": req.userId});
+    return res.send({"id": req.userId});
   }
 };
 
