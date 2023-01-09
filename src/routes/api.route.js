@@ -1,9 +1,10 @@
 const express = require('express');
 const {signUp, signIn} = require('../controllers/auth.controller');
 const {tokenToID} = require('../controllers/auth.test.controller');
-const {editUser} = require('../controllers/edit.controller');
+const {editUser} = require('../controllers/user-edit.controller');
 const {uploadFile, downloadFile} = require('../controllers/static_file.controller');
 const {getAll, getById} = require('../controllers/user.controller');
+const {addFriend} = require("../controllers/friend.controller");
 const router = new express.Router();
 
 router.post('/signup', signUp)
@@ -18,5 +19,7 @@ router.post('/upload-file', uploadFile)
 
 router.get('/user', getAll)
     .get('/user/:id', getById);
+
+router.post('/friend', addFriend);
 
 module.exports = router;

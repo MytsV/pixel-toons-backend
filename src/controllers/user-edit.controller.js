@@ -8,16 +8,11 @@ const editUser = async (req, res) => {
   if (req.params.id !== req.userId) return res.status(403).send('Forbidden');
   const user = await User.findOne({_id: req.userId});
   if (!user) return res.status(404).send('User not found');
-  const data = {
-    biography: req.body.biography,
-    avatarUrl: req.body.avatarUrl,
-  };
   const userSchema = {
-    username: user.username,
-    email: user.email,
-    password: user.password,
-    joinDate: user.joinDate,
-    data: data,
+    data: {
+      biography: req.body.biography,
+      avatarUrl: req.body.avatarUrl,
+    },
   };
   try {
     await user.updateOne(userSchema);

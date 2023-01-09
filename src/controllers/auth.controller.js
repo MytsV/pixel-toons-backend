@@ -30,7 +30,9 @@ const signUp = (req, res) => {
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, SALT_ROUNDS),
     joinDate: new Date(),
-    data: {},
+    data: {
+      friends: []
+    },
   });
   user.save((err, user) => {
     if (err != null) {
