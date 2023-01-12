@@ -15,7 +15,7 @@ const addRating = (upvote) => async (req, res) => {
 
   let post;
   try {
-    post = await Post.findOne({ _id: req.params.id });
+    post = await Post.findOne({ _id: req.query.postId });
   } catch (err) {
     return sendMsg(res, 'post_not_found', 404);
   }
