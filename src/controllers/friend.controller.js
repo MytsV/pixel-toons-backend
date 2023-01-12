@@ -38,7 +38,7 @@ const addFriend = async (req, res) => {
     },
   });
 
-  return sendMsg(res, 'friend_added', 200);
+  return sendMsg(res, 'friend_added');
 };
 
 const getFriends = async (req, res) => {
@@ -91,7 +91,7 @@ const deleteFriend = async (req, res) => {
     },
   });
 
-  return sendMsg(res, 'friend_deleted', 200);
+  return sendMsg(res, 'friend_deleted');
 };
 
 module.exports = { addFriend, getFriends, deleteFriend };

@@ -1,4 +1,4 @@
-const sendMsg = (res, text, status) => {
+const sendMsg = (res, text, status = 200) => {
   res.status(status).send({
     status: status,
     message: text

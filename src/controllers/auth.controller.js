@@ -40,7 +40,7 @@ const signUp = (req, res) => {
     if (err !== null) {
       handleSignUpError(err, res);
     } else {
-      sendMsg(res, 'successfully_created', 200);
+      sendMsg(res, 'successfully_created');
     }
   });
 };
