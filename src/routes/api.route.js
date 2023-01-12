@@ -1,10 +1,32 @@
 const express = require('express');
 const { signUp, signIn } = require('../controllers/auth.controller');
-const { uploadFile, downloadFile } = require('../controllers/static_file.controller');
-const { getAllUsers, getUserById, editUser } = require('../controllers/user.controller');
-const { addFriend, getFriends, deleteFriend } = require('../controllers/friend.controller');
-const { getAllPosts, createPost, getPostByID, editPost, getFeed, viewPost} = require('../controllers/post.controller');
-const {addRating, getRating, deleteRating} = require("../controllers/rating.controller");
+const {
+  uploadFile,
+  downloadFile
+} = require('../controllers/static_file.controller');
+const {
+  getAllUsers,
+  getUserById,
+  editUser
+} = require('../controllers/user.controller');
+const {
+  addFriend,
+  getFriends,
+  deleteFriend
+} = require('../controllers/friend.controller');
+const {
+  getAllPosts,
+  createPost,
+  getPostByID,
+  editPost,
+  getFeed,
+  viewPost
+} = require('../controllers/post.controller');
+const {
+  addRating,
+  getRating,
+  deleteRating
+} = require('../controllers/rating.controller');
 
 const router = new express.Router();
 router

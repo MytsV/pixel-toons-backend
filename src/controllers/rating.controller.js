@@ -1,8 +1,8 @@
-const sendMsg = require("../middleware/message_builder");
-const {validateToken} = require("../middleware");
-const User = require("../models/user.model");
-const Post = require("../models/post.model");
-const Rating = require("../models/rating.model");
+const sendMsg = require('../middleware/message_builder');
+const { validateToken } = require('../middleware');
+const User = require('../models/user.model');
+const Post = require('../models/post.model');
+const Rating = require('../models/rating.model');
 
 const getPost = async (req, res) => {
   if (!req.query.postId) {
@@ -57,7 +57,7 @@ const addRating = (upvote) => async (req, res) => {
   const rating = new Rating({
     userId: user._id,
     postId: post._id,
-    upvote: upvote
+    upvote
   });
 
   rating.save((err, _) => {
@@ -74,7 +74,7 @@ const getRatingByUser = async (req, res) => {
   if (!data) return;
   const { user, post } = data;
 
-  if(!user._id.equals(req.query.userId)) return sendMsg(res, 'forbidden', 403);
+  if (!user._id.equals(req.query.userId)) return sendMsg(res, 'forbidden', 403);
 
   const rating = await Rating.findOne({
     userId: user._id,
@@ -99,7 +99,7 @@ const getRatingSum = async (req, res) => {
   const rating = positive - (ratings.length - positive);
 
   res.send({
-    rating: rating
+    rating
   });
 };
 
@@ -113,7 +113,7 @@ const deleteRating = async (req, res) => {
   if (!data) return;
   const { user, post } = data;
 
-  if(!user._id.equals(req.query.userId)) return sendMsg(res, 'forbidden', 403);
+  if (!user._id.equals(req.query.userId)) return sendMsg(res, 'forbidden', 403);
 
   await Rating.deleteOne({
     userId: user._id,
@@ -123,4 +123,4 @@ const deleteRating = async (req, res) => {
   sendMsg(res, 'successfully_deleted');
 };
 
-module.exports = {addRating, getRating, deleteRating};
+module.exports = { addRating, getRating, deleteRating };

@@ -42,9 +42,10 @@ const getAllPosts = async (req, res) => {
     return sendMsg(res, 'bad_page_value', 422);
   }
   if (page) {
-    posts = await Post.find(filter).sort({date: -1}).limit(PER_PAGE).skip(PER_PAGE * (page - 1));
+    posts = await Post.find(filter).sort({ date: -1 })
+      .limit(PER_PAGE).skip(PER_PAGE * (page - 1));
   } else {
-    posts = await Post.find(filter).sort({date: -1});
+    posts = await Post.find(filter).sort({ date: -1 });
   }
 
   return res.send(posts);
@@ -102,8 +103,8 @@ const getFeed = async (req, res) => {
   if (!user) return sendMsg(res, 'user_not_found', 404);
 
   const friends = user.data.friends;
-  const posts = await Post.find({userId: {$in: friends.map((f) => f._id)}})
-    .sort({date: -1});
+  const posts = await Post.find({ userId: { $in: friends.map((f) => f._id) } })
+    .sort({ date: -1 });
 
   return res.send(posts);
 };
@@ -133,4 +134,11 @@ const viewPost = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getAllPosts, getPostByID, editPost, getFeed, viewPost };
+module.exports = {
+  createPost,
+  getAllPosts,
+  getPostByID,
+  editPost,
+  getFeed,
+  viewPost
+};

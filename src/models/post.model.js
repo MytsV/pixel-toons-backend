@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const Post = mongoose.model(
   'Post',
   new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
     name: {
       type: String,
       required: true,
