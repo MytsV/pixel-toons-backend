@@ -1,18 +1,19 @@
 const upload = require('../middleware/upload');
 const mongoose = require('mongoose');
 const { GridFSBucket } = require('mongodb');
+const sendMsg = require("../middleware/message_builder");
 
 const uploadFile = async (req, res) => {
   try {
     await upload(req, res);
     if (!req.file) {
-      return res.send('File wasn\'t selected');
+      return sendMsg(res, 'file_not_selected', 422);
     }
     return res.send({
       filename: req.file.filename,
     });
   } catch (err) {
-    return res.send(err);
+    return sendMsg(res, 'server_error', 500);
   }
 };
 
@@ -29,13 +30,13 @@ const downloadFile = async (req, res) => {
 
     downloadStream.on('error', (_) =>
       // 404 Not Found
-      res.status(404).send('File not found')
+      sendMsg(res, 'file_not_found', 404)
     );
 
     downloadStream.on('end', () => res.end());
   } catch (err) {
     // Server error
-    return res.status(500).send(err);
+    return sendMsg(res, 'server_error', 500);
   }
 };
 
