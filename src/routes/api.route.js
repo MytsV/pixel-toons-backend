@@ -1,8 +1,7 @@
 const express = require('express');
 const { signUp, signIn } = require('../controllers/auth.controller');
-const { editUser } = require('../controllers/user-edit.controller');
 const { uploadFile, downloadFile } = require('../controllers/static_file.controller');
-const { getAllUsers, getUserById } = require('../controllers/user.controller');
+const { getAllUsers, getUserById, editUser } = require('../controllers/user.controller');
 const { addFriend, getFriends, deleteFriend } = require('../controllers/friend.controller');
 const {getAllPosts, createPost, getPostByID, editPost} = require("../controllers/post.controller");
 
