@@ -115,4 +115,8 @@ const getFeed = async (req, res) => {
   return res.send(posts);
 };
 
+const viewPost = async (req, res) => {
+
+};
+
 module.exports = { createPost, getAllPosts, getPostByID, editPost, getFeed };

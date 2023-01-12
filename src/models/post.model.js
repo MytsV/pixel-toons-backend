@@ -23,6 +23,10 @@ const Post = mongoose.model(
       type: Date,
       required: true,
     },
+    views: {
+      type: Number,
+      default: 0
+    }
   }),
   'posts',
 );
