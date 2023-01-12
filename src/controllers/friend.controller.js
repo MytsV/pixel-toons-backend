@@ -27,7 +27,7 @@ const getData = async (req, res) => {
   }
   if (!friend) return sendMsg(res, 'friend_not_found', 404);
 
-  return {user, friend};
+  return { user, friend };
 };
 
 const addFriend = async (req, res) => {
