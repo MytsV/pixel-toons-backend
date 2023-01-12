@@ -60,7 +60,7 @@ const signIn = (req, res) => {
       },
     ],
   }).exec((err, user) => {
-    if (err !== null) return handleSignInError(err, res);
+    if (err !== null) return sendMsg(res, err.message, 500);
     if (!user) return sendMsg(res, 'user_not_found', 404);
 
     const isPassValid = bcrypt.compareSync(
