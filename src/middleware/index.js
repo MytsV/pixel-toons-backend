@@ -1,3 +1,3 @@
-const {validateToken} = require('./jwt_validation');
+const { validateToken } = require('./jwt_validation');
 
-module.exports = {validateToken};
+module.exports = { validateToken };

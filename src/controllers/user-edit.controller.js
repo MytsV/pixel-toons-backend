@@ -1,4 +1,4 @@
-const {validateToken} = require('../middleware');
+const { validateToken } = require('../middleware');
 const User = require('../models/user.model');
 
 const editUser = async (req, res) => {
@@ -6,7 +6,7 @@ const editUser = async (req, res) => {
   if (!req.userId) return;
   // 403 Forbidden
   if (req.params.id !== req.userId) return res.status(403).send('Forbidden');
-  const user = await User.findOne({_id: req.userId});
+  const user = await User.findOne({ _id: req.userId });
   if (!user) return res.status(404).send('User not found');
   const userSchema = {
     data: {
@@ -16,7 +16,7 @@ const editUser = async (req, res) => {
   };
   try {
     await user.updateOne(userSchema);
-    const editedUser = await User.findOne({_id: req.userId});
+    const editedUser = await User.findOne({ _id: req.userId });
     res.send(editedUser);
   } catch (err) {
     if (err.message) {
@@ -29,4 +29,4 @@ const editUser = async (req, res) => {
   }
 };
 
-module.exports = {editUser};
+module.exports = { editUser };

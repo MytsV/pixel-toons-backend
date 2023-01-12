@@ -9,36 +9,36 @@ const userData = new mongoose.Schema({
   avatarUrl: {
     type: String,
   },
-  friends: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 const User = mongoose.model(
-    'User',
-    new mongoose.Schema({
-      username: {
-        type: String,
-        required: true,
-        minLength: 5,
-        maxLength: 20,
-        unique: true,
-      },
-      email: {
-        type: String,
-        required: true,
-        match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-        unique: true,
-      },
-      password: {
-        type: String,
-        required: true,
-      },
-      joinDate: {
-        type: Date,
-        required: true,
-      },
-      data: userData,
-    }),
-    'users',
+  'User',
+  new mongoose.Schema({
+    username: {
+      type: String,
+      required: true,
+      minLength: 5,
+      maxLength: 20,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    joinDate: {
+      type: Date,
+      required: true,
+    },
+    data: userData,
+  }),
+  'users',
 );
 
 module.exports = User;

@@ -1,4 +1,4 @@
-const {GridFsStorage} = require('multer-gridfs-storage');
+const { GridFsStorage } = require('multer-gridfs-storage');
 const multer = require('multer');
 const util = require('util');
 
@@ -14,7 +14,7 @@ const storage = new GridFsStorage({
 });
 
 const uploadFiles = multer({
-  storage: storage,
+  storage,
 }).single('file');
 const upload = util.promisify(uploadFiles);
 module.exports = upload;

@@ -18,4 +18,4 @@ const validateToken = (req, res) => {
   });
 };
 
-module.exports = {validateToken};
+module.exports = { validateToken };

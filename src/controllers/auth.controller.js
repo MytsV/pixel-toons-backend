@@ -3,7 +3,7 @@ const config = require('../config/auth.config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-const {getSignUpError} = require('../middleware/auth_validation');
+const { getSignUpError } = require('../middleware/auth_validation');
 
 const handleSignUpError = (err, res) => {
   if (err.message) {
@@ -22,7 +22,7 @@ const SALT_ROUNDS = 8;
 
 const signUp = (req, res) => {
   const err = getSignUpError(req);
-  if (err != null) {
+  if (err !== null) {
     return handleSignUpError(err, res);
   }
   const user = new User({
@@ -34,8 +34,8 @@ const signUp = (req, res) => {
       friends: [],
     },
   });
-  user.save((err, user) => {
-    if (err != null) {
+  user.save((err, _) => {
+    if (err !== null) {
       handleSignUpError(err, res);
     } else {
       res.send('User was successfully created');
@@ -63,16 +63,16 @@ const signIn = (req, res) => {
       },
     ],
   }).exec((err, user) => {
-    if (err != null) return handleSignInError(err, res);
+    if (err !== null) return handleSignInError(err, res);
     if (!user) return res.status(404).send('User hasn\'t been found');
 
     const isPassValid = bcrypt.compareSync(
-        req.body.password,
-        user.password,
+      req.body.password,
+      user.password,
     );
     if (!isPassValid) return res.status(404).send('Password isn\'t valid');
 
-    const token = jwt.sign({id: user.id}, config.secret, {
+    const token = jwt.sign({ id: user.id }, config.secret, {
       expiresIn: 24 * 60 * 60, // 24 hours
     });
 
@@ -80,9 +80,9 @@ const signIn = (req, res) => {
       id: user._id,
       username: user.username,
       email: user.email,
-      token: token,
+      token,
     });
   });
 };
 
-module.exports = {signUp, signIn};
+module.exports = { signUp, signIn };

@@ -1,6 +1,6 @@
 const upload = require('../middleware/upload');
 const mongoose = require('mongoose');
-const {GridFSBucket} = require('mongodb');
+const { GridFSBucket } = require('mongodb');
 
 const uploadFile = async (req, res) => {
   try {
@@ -18,21 +18,19 @@ const uploadFile = async (req, res) => {
 
 const downloadFile = async (req, res) => {
   try {
-    const {db} = mongoose.connection;
+    const { db } = mongoose.connection;
 
     const bucket = new GridFSBucket(db, {
       bucketName: 'uploads',
     });
     const downloadStream = bucket.openDownloadStreamByName(req.params.name);
 
-    downloadStream.on('data', (data) => {
-      return res.write(data);
-    });
+    downloadStream.on('data', (data) => res.write(data));
 
-    downloadStream.on('error', (err) => {
+    downloadStream.on('error', (_) =>
       // 404 Not Found
-      return res.status(404).send('File not found');
-    });
+      res.status(404).send('File not found')
+    );
 
     downloadStream.on('end', () => res.end());
   } catch (err) {
@@ -41,4 +39,4 @@ const downloadFile = async (req, res) => {
   }
 };
 
-module.exports = {uploadFile, downloadFile};
+module.exports = { uploadFile, downloadFile };

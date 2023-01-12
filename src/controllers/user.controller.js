@@ -1,4 +1,4 @@
-const {validateToken} = require('../middleware');
+const { validateToken } = require('../middleware');
 const User = require('../models/user.model');
 
 const PER_PAGE = 10;
@@ -7,10 +7,11 @@ const getById = async (req, res) => {
   try {
     validateToken(req, null);
   } catch (err) {
+    console.log(err);
   }
   let user;
   try {
-    user = await User.findOne({_id: req.params.id});
+    user = await User.findOne({ _id: req.params.id });
   } catch (err) {
     return res.status(404).send('User not found');
   }
@@ -44,14 +45,12 @@ const getAll = async (req, res) => {
     users = await User.find(filter);
   }
 
-  return res.send(users.map((u) => {
-    return {
-      id: u._id,
-      username: u.username,
-      joinDate: u.joinDate,
-      data: u.data,
-    };
-  }));
+  return res.send(users.map((u) => ({
+    id: u._id,
+    username: u.username,
+    joinDate: u.joinDate,
+    data: u.data,
+  })));
 };
 
-module.exports = {getById, getAll};
+module.exports = { getById, getAll };
