@@ -4,22 +4,40 @@ const User = require("../models/user.model");
 const Post = require("../models/post.model");
 const Rating = require("../models/rating.model");
 
-const addRating = (upvote) => async (req, res) => {
+const getData = async (req, res) => {
   validateToken(req, res);
   if (!req.userId) return;
 
   const user = await User.findOne({ _id: req.userId });
-  if (!user) return sendMsg(res, 'user_not_found', 404);
+  if (!user) {
+    sendMsg(res, 'user_not_found', 404);
+    return;
+  }
 
-  if (!req.query.postId) return sendMsg(res, 'post_id_missing', 422);
+  if (!req.query.postId) {
+    sendMsg(res, 'post_id_missing', 422);
+    return;
+  }
 
   let post;
   try {
     post = await Post.findOne({ _id: req.query.postId });
   } catch (err) {
-    return sendMsg(res, 'post_not_found', 404);
+    sendMsg(res, 'post_not_found', 404);
+    return;
   }
-  if (!post) return sendMsg(res, 'post_not_found', 404);
+  if (!post) {
+    sendMsg(res, 'post_not_found', 404);
+    return;
+  }
+
+  return { post, user };
+};
+
+const addRating = (upvote) => async (req, res) => {
+  const data = await getData(req, res);
+  if (!data) return;
+  const { user, post } = data;
 
   const filter = {
     userId: user._id,
@@ -45,21 +63,9 @@ const addRating = (upvote) => async (req, res) => {
 };
 
 const getRatingByUser = async (req, res) => {
-  validateToken(req, res);
-  if (!req.userId) return;
-
-  const user = await User.findOne({ _id: req.userId });
-  if (!user) return sendMsg(res, 'user_not_found', 404);
-
-  if (!req.query.postId) return sendMsg(res, 'post_id_missing', 422);
-
-  let post;
-  try {
-    post = await Post.findOne({ _id: req.query.postId });
-  } catch (err) {
-    return sendMsg(res, 'post_not_found', 404);
-  }
-  if (!post) return sendMsg(res, 'post_not_found', 404);
+  const data = await getData(req, res);
+  if (!data) return;
+  const { user, post } = data;
 
   const rating = await Rating.findOne({
     userId: user._id,
