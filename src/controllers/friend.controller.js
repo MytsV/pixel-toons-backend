@@ -3,9 +3,9 @@ const User = require('../models/user.model');
 const sendMsg = require("../middleware/message_builder");
 
 const addFriend = async (req, res) => {
-  if (!req.query.friendId) {
+  if (!req.params.id) {
     // 422 Unprocessable Entity
-    return sendMsg(res, 'friend_id_missing', 422);
+    return sendMsg(res, 'id_missing', 422);
   }
 
   validateToken(req, res);
@@ -16,7 +16,7 @@ const addFriend = async (req, res) => {
 
   let friend;
   try {
-    friend = await User.findOne({_id: req.query.friendId});
+    friend = await User.findOne({_id: req.params.id});
   } catch (e) {
     return sendMsg(res, 'friend_not_found', 404);
   }
@@ -42,12 +42,12 @@ const addFriend = async (req, res) => {
 };
 
 const getFriends = async (req, res) => {
-  if (!req.query.id) {
+  if (!req.params.id) {
     // 422 Unprocessable Entity
     return sendMsg(res, 'id_missing', 422);
   }
 
-  const user = await User.findOne({ _id: req.query.id });
+  const user = await User.findOne({ _id: req.params.id });
   if (!user) return sendMsg(res, 'user_not_found', 404);
   const friends = await User.find({ _id: { $in: user.data.friends } });
   res.send(friends.map((u) =>
@@ -61,9 +61,9 @@ const getFriends = async (req, res) => {
 };
 
 const deleteFriend = async (req, res) => {
-  if (!req.query.friendId) {
+  if (!req.params.id) {
     // 422 Unprocessable Entity
-    return sendMsg(res, 'friend_id_missing', 422);
+    return sendMsg(res, 'id_missing', 422);
   }
 
   validateToken(req, res);
@@ -74,7 +74,7 @@ const deleteFriend = async (req, res) => {
 
   let friend;
   try {
-    friend = await User.findOne({_id: req.query.friendId});
+    friend = await User.findOne({_id: req.params.id});
   } catch (e) {
     return sendMsg(res, 'friend_not_found', 404);
   }
