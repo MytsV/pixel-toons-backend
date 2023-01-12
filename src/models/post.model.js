@@ -17,6 +17,7 @@ const Post = mongoose.model(
     },
     url: {
       type: String,
+      required: true,
     },
     date: {
       type: Date,
