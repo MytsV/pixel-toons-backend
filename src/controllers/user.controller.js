@@ -8,7 +8,6 @@ const getById = async (req, res) => {
   try {
     validateToken(req, null);
   } catch (err) {
-    console.log(err);
   }
   let user;
   try {
