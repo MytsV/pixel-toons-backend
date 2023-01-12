@@ -108,4 +108,19 @@ const getRating = async (req, res) => {
   return getRatingSum(req, res);
 };
 
-module.exports = {addRating, getRating};
+const deleteRating = async (req, res) => {
+  const data = await getData(req, res);
+  if (!data) return;
+  const { user, post } = data;
+
+  if(!user._id.equals(req.query.userId)) return sendMsg(res, 'forbidden', 403);
+
+  await Rating.deleteOne({
+    userId: user._id,
+    postId: post._id,
+  });
+
+  sendMsg(res, 'successfully_deleted');
+};
+
+module.exports = {addRating, getRating, deleteRating};
