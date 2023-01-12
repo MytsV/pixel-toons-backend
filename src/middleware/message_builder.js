@@ -1,6 +1,6 @@
 const sendMsg = (res, text, status = 200) => {
   res.status(status).send({
-    status: status,
+    status,
     message: text
   });
 };

@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const Post = mongoose.model(
   'Post',
   new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
     name: {
       type: String,
       required: true,
@@ -23,6 +27,10 @@ const Post = mongoose.model(
       type: Date,
       required: true,
     },
+    views: {
+      type: Number,
+      default: 0
+    }
   }),
   'posts',
 );

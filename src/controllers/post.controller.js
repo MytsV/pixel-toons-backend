@@ -1,7 +1,7 @@
-const Post = require("../models/post.model");
-const {validateToken} = require("../middleware");
-const User = require("../models/user.model");
-const sendMsg = require("../middleware/message_builder");
+const Post = require('../models/post.model');
+const { validateToken } = require('../middleware');
+const User = require('../models/user.model');
+const sendMsg = require('../middleware/message_builder');
 
 const createPost = async (req, res) => {
   validateToken(req, res);
@@ -42,19 +42,13 @@ const getAllPosts = async (req, res) => {
     return sendMsg(res, 'bad_page_value', 422);
   }
   if (page) {
-    posts = await Post.find(filter).limit(PER_PAGE).skip(PER_PAGE * (page - 1));
+    posts = await Post.find(filter).sort({ date: -1 })
+      .limit(PER_PAGE).skip(PER_PAGE * (page - 1));
   } else {
-    posts = await Post.find(filter);
+    posts = await Post.find(filter).sort({ date: -1 });
   }
 
-  return res.send(posts.map((p) => ({
-    id: p._id,
-    userId: p.userId,
-    name: p.name,
-    desc: p.desc,
-    url: p.url,
-    date: p.date
-  })));
+  return res.send(posts);
 };
 
 const getPostByID = async (req, res) => {
@@ -100,4 +94,51 @@ const editPost = async (req, res) => {
   }
 };
 
-module.exports = {createPost, getAllPosts, getPostByID, editPost};
+const getFeed = async (req, res) => {
+  validateToken(req, res);
+  if (!req.userId) return;
+  if (req.userId !== req.params.userId) return sendMsg(res, 'forbidden', 403);
+
+  const user = await User.findOne({ _id: req.userId });
+  if (!user) return sendMsg(res, 'user_not_found', 404);
+
+  const friends = user.data.friends;
+  const posts = await Post.find({ userId: { $in: friends.map((f) => f._id) } })
+    .sort({ date: -1 });
+
+  return res.send(posts);
+};
+
+const viewPost = async (req, res) => {
+  let post;
+  try {
+    post = await Post.findOne({ _id: req.params.id });
+  } catch (err) {
+    return sendMsg(res, 'post_not_found', 404);
+  }
+
+  const postSchema = {
+    views: post.views + 1
+  };
+  try {
+    await post.updateOne(postSchema);
+    return sendMsg(res, 'post_viewed');
+  } catch (err) {
+    if (err.message) {
+      // 422 Unprocessable Entity
+      return sendMsg(res, err.message, 422);
+    } else {
+      // Server error
+      return sendMsg(res, 'server_error', 500);
+    }
+  }
+};
+
+module.exports = {
+  createPost,
+  getAllPosts,
+  getPostByID,
+  editPost,
+  getFeed,
+  viewPost
+};

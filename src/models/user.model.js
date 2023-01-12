@@ -25,6 +25,7 @@ const User = mongoose.model(
     email: {
       type: String,
       required: true,
+      //Matches any email address
       match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
       unique: true,
     },

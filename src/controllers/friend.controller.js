@@ -1,31 +1,43 @@
 const { validateToken } = require('../middleware');
 const User = require('../models/user.model');
-const sendMsg = require("../middleware/message_builder");
+const sendMsg = require('../middleware/message_builder');
 
-const addFriend = async (req, res) => {
+const getData = async (req, res) => {
   if (!req.params.id) {
     // 422 Unprocessable Entity
-    return sendMsg(res, 'id_missing', 422);
+    sendMsg(res, 'id_missing', 422);
+    return;
   }
 
   validateToken(req, res);
   if (!req.userId) return;
 
   const user = await User.findOne({ _id: req.userId });
-  if (!user) return sendMsg(res, 'user_not_found', 404);
+  if (!user) {
+    sendMsg(res, 'user_not_found', 404);
+    return;
+  }
 
   let friend;
   try {
-    friend = await User.findOne({_id: req.params.id});
+    friend = await User.findOne({ _id: req.params.id });
   } catch (e) {
-    return sendMsg(res, 'friend_not_found', 404);
+    sendMsg(res, 'friend_not_found', 404);
+    return;
   }
   if (!friend) return sendMsg(res, 'friend_not_found', 404);
+
+  return { user, friend };
+};
+
+const addFriend = async (req, res) => {
+  const data = await getData(req, res);
+  if (!data) return;
+  const { user, friend } = data;
 
   if (user._id.equals(friend._id)) {
     return sendMsg(res, 'cannot_add_self', 422);
   }
-
   if (user.data.friends.includes(friend._id)) {
     return sendMsg(res, 'friend_already_in', 422);
   }
@@ -61,27 +73,13 @@ const getFriends = async (req, res) => {
 };
 
 const deleteFriend = async (req, res) => {
-  if (!req.params.id) {
-    // 422 Unprocessable Entity
-    return sendMsg(res, 'id_missing', 422);
-  }
-
-  validateToken(req, res);
-  if (!req.userId) return;
-
-  const user = await User.findOne({ _id: req.userId });
-  if (!user) return sendMsg(res, 'user_not_found', 404);
-
-  let friend;
-  try {
-    friend = await User.findOne({_id: req.params.id});
-  } catch (e) {
-    return sendMsg(res, 'friend_not_found', 404);
-  }
-  if (!friend) return sendMsg(res, 'friend_not_found', 404);
+  const data = await getData(req, res);
+  if (!data) return;
+  const { user, friend } = data;
 
   if (!user.data.friends.includes(friend._id)) {
-    return sendMsg(res, 'friend_not_in', 422);
+    sendMsg(res, 'friend_not_in', 422);
+    return;
   }
 
   const newFriends = user.data.friends.filter((u) => !u._id.equals(friend._id));
