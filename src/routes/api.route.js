@@ -4,7 +4,7 @@ const { uploadFile, downloadFile } = require('../controllers/static_file.control
 const { getAllUsers, getUserById, editUser } = require('../controllers/user.controller');
 const { addFriend, getFriends, deleteFriend } = require('../controllers/friend.controller');
 const { getAllPosts, createPost, getPostByID, editPost } = require('../controllers/post.controller');
-const {addRating} = require("../controllers/rating.controller");
+const {addRating, getRatingByUser} = require("../controllers/rating.controller");
 
 const router = new express.Router();
 router
@@ -28,6 +28,7 @@ router
   .put('/post/:id', editPost)
 
   .post('/rating/up', addRating(true))
-  .post('/rating/down', addRating(false));
+  .post('/rating/down', addRating(false))
+  .get('/rating', getRatingByUser);
 
 module.exports = router;

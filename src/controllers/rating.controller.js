@@ -26,7 +26,7 @@ const addRating = (upvote) => async (req, res) => {
     postId: post._id,
   };
   if (Rating.exists(filter)) {
-    Rating.deleteOne(filter);
+    await Rating.deleteMany(filter);
   }
 
   const rating = new Rating({
@@ -44,4 +44,32 @@ const addRating = (upvote) => async (req, res) => {
   });
 };
 
-module.exports = {addRating};
+const getRatingByUser = async (req, res) => {
+  validateToken(req, res);
+  if (!req.userId) return;
+
+  const user = await User.findOne({ _id: req.userId });
+  if (!user) return sendMsg(res, 'user_not_found', 404);
+
+  if (!req.query.postId) return sendMsg(res, 'post_id_missing', 422);
+
+  let post;
+  try {
+    post = await Post.findOne({ _id: req.query.postId });
+  } catch (err) {
+    return sendMsg(res, 'post_not_found', 404);
+  }
+  if (!post) return sendMsg(res, 'post_not_found', 404);
+
+  const rating = await Rating.findOne({
+    userId: user._id,
+    postId: post._id,
+  });
+  if (!rating) return sendMsg(res, 'rating_not_found', 404);
+
+  res.send({
+    upvote: rating.upvote
+  });
+};
+
+module.exports = {addRating, getRatingByUser};
