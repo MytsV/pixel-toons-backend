@@ -4,7 +4,7 @@ const sendMsg = require("../middleware/message_builder");
 
 const PER_PAGE = 10;
 
-const getById = async (req, res) => {
+const getUserById = async (req, res) => {
   try {
     validateToken(req, null);
   } catch (err) {
@@ -28,7 +28,7 @@ const getById = async (req, res) => {
   return res.send(data);
 };
 
-const getAll = async (req, res) => {
+const getAllUsers = async (req, res) => {
   const filter = {};
   if (req.query.name) {
     filter.username = new RegExp(`${req.query.name}.*`, 'gi');
@@ -53,4 +53,4 @@ const getAll = async (req, res) => {
   })));
 };
 
-module.exports = { getById, getAll };
+module.exports = { getUserById, getAllUsers };
