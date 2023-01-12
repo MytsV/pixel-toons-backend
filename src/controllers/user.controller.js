@@ -1,6 +1,6 @@
 const { validateToken } = require('../middleware');
 const User = require('../models/user.model');
-const sendMsg = require("../middleware/message_builder");
+const sendMsg = require('../middleware/message_builder');
 
 const PER_PAGE = 10;
 

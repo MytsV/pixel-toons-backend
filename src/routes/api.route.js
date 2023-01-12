@@ -3,7 +3,7 @@ const { signUp, signIn } = require('../controllers/auth.controller');
 const { uploadFile, downloadFile } = require('../controllers/static_file.controller');
 const { getAllUsers, getUserById, editUser } = require('../controllers/user.controller');
 const { addFriend, getFriends, deleteFriend } = require('../controllers/friend.controller');
-const {getAllPosts, createPost, getPostByID, editPost} = require("../controllers/post.controller");
+const { getAllPosts, createPost, getPostByID, editPost } = require('../controllers/post.controller');
 
 const router = new express.Router();
 router
@@ -24,6 +24,6 @@ router
   .get('/post', getAllPosts)
   .post('/post', createPost)
   .get('/post/:id', getPostByID)
-  .put('/post/:id', editPost)
+  .put('/post/:id', editPost);
 
 module.exports = router;

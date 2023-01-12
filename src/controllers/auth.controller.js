@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const { getSignUpError } = require('../middleware/auth_validation');
-const sendMsg = require("../middleware/message_builder");
+const sendMsg = require('../middleware/message_builder');
 
 const handleSignUpError = (err, res) => {
   if (err.message) {

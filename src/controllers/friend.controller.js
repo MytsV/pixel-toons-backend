@@ -1,6 +1,6 @@
 const { validateToken } = require('../middleware');
 const User = require('../models/user.model');
-const sendMsg = require("../middleware/message_builder");
+const sendMsg = require('../middleware/message_builder');
 
 const addFriend = async (req, res) => {
   if (!req.params.id) {
@@ -16,7 +16,7 @@ const addFriend = async (req, res) => {
 
   let friend;
   try {
-    friend = await User.findOne({_id: req.params.id});
+    friend = await User.findOne({ _id: req.params.id });
   } catch (e) {
     return sendMsg(res, 'friend_not_found', 404);
   }
@@ -74,7 +74,7 @@ const deleteFriend = async (req, res) => {
 
   let friend;
   try {
-    friend = await User.findOne({_id: req.params.id});
+    friend = await User.findOne({ _id: req.params.id });
   } catch (e) {
     return sendMsg(res, 'friend_not_found', 404);
   }

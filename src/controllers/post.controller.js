@@ -1,7 +1,7 @@
-const Post = require("../models/post.model");
-const {validateToken} = require("../middleware");
-const User = require("../models/user.model");
-const sendMsg = require("../middleware/message_builder");
+const Post = require('../models/post.model');
+const { validateToken } = require('../middleware');
+const User = require('../models/user.model');
+const sendMsg = require('../middleware/message_builder');
 
 const createPost = async (req, res) => {
   validateToken(req, res);
@@ -100,4 +100,4 @@ const editPost = async (req, res) => {
   }
 };
 
-module.exports = {createPost, getAllPosts, getPostByID, editPost};
+module.exports = { createPost, getAllPosts, getPostByID, editPost };
