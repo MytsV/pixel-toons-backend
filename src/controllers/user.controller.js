@@ -1,5 +1,6 @@
 const { validateToken } = require('../middleware');
 const User = require('../models/user.model');
+const sendMsg = require("../middleware/message_builder");
 
 const PER_PAGE = 10;
 
@@ -13,9 +14,9 @@ const getById = async (req, res) => {
   try {
     user = await User.findOne({ _id: req.params.id });
   } catch (err) {
-    return res.status(404).send('User not found');
+    return sendMsg(res, 'user_not_found', 404);
   }
-  if (!user) return res.status(404).send('User not found');
+  if (!user) return sendMsg(res, 'user_not_found', 404);
   const data = {
     username: user.username,
     joinDate: user.joinDate,
@@ -37,7 +38,7 @@ const getAll = async (req, res) => {
 
   const page = req.query.page;
   if (page <= 0) {
-    return res.status(422).send('Bad page value');
+    return sendMsg(res, 'bad_page_value', 422);
   }
   if (page) {
     users = await User.find(filter).limit(PER_PAGE).skip(PER_PAGE * (page - 1));
