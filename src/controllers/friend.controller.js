@@ -47,7 +47,6 @@ const getFriends = async (req, res) => {
   if (!user) return sendMsg(res, 'user_not_found', 404);
   const friends = await User.find({ _id: { $in: user.data.friends } });
   res.send(friends.map((u) =>
-    //TODO: extract
     ({
       id: u._id,
       username: u.username,
