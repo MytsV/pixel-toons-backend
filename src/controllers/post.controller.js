@@ -103,14 +103,13 @@ const editPost = async (req, res) => {
 const getFeed = async (req, res) => {
   validateToken(req, res);
   if (!req.userId) return;
-
-  if (!req.userId !== req.params.userId) return;
+  if (req.userId !== req.params.userId) return sendMsg(res, 'forbidden', 403);
 
   const user = await User.findOne({ _id: req.userId });
   if (!user) return sendMsg(res, 'user_not_found', 404);
 
   const friends = user.data.friends;
-  const posts = await Post.find({_id: {$in: friends.map((f) => f._id)}})
+  const posts = await Post.find({userId: {$in: friends.map((f) => f._id)}})
     .sort({date: -1});
 
   return res.send(posts);
