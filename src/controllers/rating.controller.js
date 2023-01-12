@@ -21,6 +21,14 @@ const addRating = (upvote) => async (req, res) => {
   }
   if (!post) return sendMsg(res, 'post_not_found', 404);
 
+  const filter = {
+    userId: user._id,
+    postId: post._id,
+  };
+  if (Rating.exists(filter)) {
+    Rating.deleteOne(filter);
+  }
+
   const rating = new Rating({
     userId: user._id,
     postId: post._id,
@@ -35,3 +43,5 @@ const addRating = (upvote) => async (req, res) => {
     }
   });
 };
+
+module.exports = {addRating};
