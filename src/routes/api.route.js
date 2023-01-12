@@ -4,7 +4,7 @@ const { editUser } = require('../controllers/user-edit.controller');
 const { uploadFile, downloadFile } = require('../controllers/static_file.controller');
 const { getAll, getById } = require('../controllers/user.controller');
 const { addFriend, getFriends, deleteFriend } = require('../controllers/friend.controller');
-const {getAllPosts, createPost, getPostByID} = require("../controllers/post.controller");
+const {getAllPosts, createPost, getPostByID, editPost} = require("../controllers/post.controller");
 
 const router = new express.Router();
 router
@@ -25,5 +25,6 @@ router
   .get('/post', getAllPosts)
   .post('/post', createPost)
   .get('/post/:id', getPostByID)
+  .put('/post/:id', editPost)
 
 module.exports = router;

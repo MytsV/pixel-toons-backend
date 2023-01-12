@@ -68,4 +68,36 @@ const getPostByID = async (req, res) => {
   return res.send(post);
 };
 
-module.exports = {createPost, getAllPosts, getPostByID};
+const editPost = async (req, res) => {
+  validateToken(req, res);
+  if (!req.userId) return;
+
+  let post;
+  try {
+    post = await Post.findOne({ _id: req.params.id });
+  } catch (err) {
+    return sendMsg(res, 'post_not_found', 404);
+  }
+
+  // 403 Forbidden
+  if (!post.userId.equals(req.userId)) return sendMsg(res, 'forbidden', 403);
+
+  const postSchema = {
+    desc: req.body.desc
+  };
+  try {
+    await post.updateOne(postSchema);
+    const editedPost = await Post.findOne({ _id: post._id });
+    res.send(editedPost);
+  } catch (err) {
+    if (err.message) {
+      // 422 Unprocessable Entity
+      return sendMsg(res, err.message, 422);
+    } else {
+      // Server error
+      return sendMsg(res, 'server_error', 500);
+    }
+  }
+};
+
+module.exports = {createPost, getAllPosts, getPostByID, editPost};
