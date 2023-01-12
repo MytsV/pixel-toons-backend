@@ -4,16 +4,7 @@ const User = require("../models/user.model");
 const Post = require("../models/post.model");
 const Rating = require("../models/rating.model");
 
-const getData = async (req, res) => {
-  validateToken(req, res);
-  if (!req.userId) return;
-
-  const user = await User.findOne({ _id: req.userId });
-  if (!user) {
-    sendMsg(res, 'user_not_found', 404);
-    return;
-  }
-
+const getPost = async (req, res) => {
   if (!req.query.postId) {
     sendMsg(res, 'post_id_missing', 422);
     return;
@@ -30,6 +21,22 @@ const getData = async (req, res) => {
     sendMsg(res, 'post_not_found', 404);
     return;
   }
+
+  return post;
+};
+
+const getData = async (req, res) => {
+  validateToken(req, res);
+  if (!req.userId) return;
+
+  const user = await User.findOne({ _id: req.userId });
+  if (!user) {
+    sendMsg(res, 'user_not_found', 404);
+    return;
+  }
+
+  const post = await getPost(req, res);
+  if (!post) return;
 
   return { post, user };
 };
@@ -67,6 +74,8 @@ const getRatingByUser = async (req, res) => {
   if (!data) return;
   const { user, post } = data;
 
+  if(!user._id.equals(req.query.userId)) return sendMsg(res, 'forbidden', 403);
+
   const rating = await Rating.findOne({
     userId: user._id,
     postId: post._id,
@@ -78,4 +87,25 @@ const getRatingByUser = async (req, res) => {
   });
 };
 
-module.exports = {addRating, getRatingByUser};
+const getRatingSum = async (req, res) => {
+  const post = await getPost(req, res);
+  if (!post) return;
+
+  const ratings = await Rating.find({
+    postId: post._id,
+  });
+
+  const positive = ratings.reduce((acc, cur) => acc + cur.upvote, 0);
+  const rating = positive - (ratings.length - positive);
+
+  res.send({
+    rating: rating
+  });
+};
+
+const getRating = async (req, res) => {
+  if (req.query.userId) return getRatingByUser(req, res);
+  return getRatingSum(req, res);
+};
+
+module.exports = {addRating, getRating};
