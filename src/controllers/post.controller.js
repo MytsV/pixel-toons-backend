@@ -47,14 +47,7 @@ const getAllPosts = async (req, res) => {
     posts = await Post.find(filter).sort({date: -1});
   }
 
-  return res.send(posts.map((p) => ({
-    id: p._id,
-    userId: p.userId,
-    name: p.name,
-    desc: p.desc,
-    url: p.url,
-    date: p.date
-  })));
+  return res.send(posts);
 };
 
 const getPostByID = async (req, res) => {
@@ -116,7 +109,28 @@ const getFeed = async (req, res) => {
 };
 
 const viewPost = async (req, res) => {
+  let post;
+  try {
+    post = await Post.findOne({ _id: req.params.id });
+  } catch (err) {
+    return sendMsg(res, 'post_not_found', 404);
+  }
 
+  const postSchema = {
+    views: post.views + 1
+  };
+  try {
+    await post.updateOne(postSchema);
+    return sendMsg(res, 'post_viewed');
+  } catch (err) {
+    if (err.message) {
+      // 422 Unprocessable Entity
+      return sendMsg(res, err.message, 422);
+    } else {
+      // Server error
+      return sendMsg(res, 'server_error', 500);
+    }
+  }
 };
 
-module.exports = { createPost, getAllPosts, getPostByID, editPost, getFeed };
+module.exports = { createPost, getAllPosts, getPostByID, editPost, getFeed, viewPost };
