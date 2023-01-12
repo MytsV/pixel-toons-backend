@@ -3,8 +3,6 @@ const {validateToken} = require("../middleware");
 const User = require("../models/user.model");
 const sendMsg = require("../middleware/message_builder");
 
-const PER_PAGE = 10;
-
 const createPost = async (req, res) => {
   validateToken(req, res);
   if (!req.userId) return;
@@ -29,6 +27,8 @@ const createPost = async (req, res) => {
     }
   });
 };
+
+const PER_PAGE = 10;
 
 const getAllPosts = async (req, res) => {
   const filter = {};
@@ -57,4 +57,15 @@ const getAllPosts = async (req, res) => {
   })));
 };
 
-module.exports = {createPost, getAllPosts};
+const getPostByID = async (req, res) => {
+  let post;
+  try {
+    post = await Post.findOne({ _id: req.params.id });
+  } catch (err) {
+    return sendMsg(res, 'post_not_found', 404);
+  }
+  if (!post) return sendMsg(res, 'post_not_found', 404);
+  return res.send(post);
+};
+
+module.exports = {createPost, getAllPosts, getPostByID};
