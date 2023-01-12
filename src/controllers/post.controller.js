@@ -3,6 +3,8 @@ const {validateToken} = require("../middleware");
 const User = require("../models/user.model");
 const sendMsg = require("../middleware/message_builder");
 
+const PER_PAGE = 10;
+
 const createPost = async (req, res) => {
   validateToken(req, res);
   if (!req.userId) return;
@@ -11,7 +13,7 @@ const createPost = async (req, res) => {
   if (!user) return sendMsg(res, 'user_not_found', 404);
 
   const post = new Post({
-    user_id: req.userId,
+    userId: req.userId,
     name: req.body.name,
     desc: req.body.desc,
     url: req.body.url,
@@ -28,4 +30,31 @@ const createPost = async (req, res) => {
   });
 };
 
-module.exports = {createPost};
+const getAllPosts = async (req, res) => {
+  const filter = {};
+  if (req.query.userId) {
+    filter.userId = req.query.userId;
+  }
+  let posts;
+
+  const page = req.query.page;
+  if (page <= 0) {
+    return sendMsg(res, 'bad_page_value', 422);
+  }
+  if (page) {
+    posts = await Post.find(filter).limit(PER_PAGE).skip(PER_PAGE * (page - 1));
+  } else {
+    posts = await Post.find(filter);
+  }
+
+  return res.send(posts.map((p) => ({
+    id: p._id,
+    userId: p.userId,
+    name: p.name,
+    desc: p.desc,
+    url: p.url,
+    date: p.date
+  })));
+};
+
+module.exports = {createPost, getAllPosts};
